@@ -62,6 +62,18 @@ Use `gok edit` to add the following entries above the `Hostname` line:
 - `FirmwarePackage` and `EEPROMPackage` are only needed on Raspberry Pis.
 - The debug UART (3-pin header) runs at 1500000 baud, like U-Boot.
 
+gokrazy’s DHCP client only configures `eth0`, which is the port labelled
+**LAN**. Plug the network cable into LAN, or point DHCP at the WAN port
+(`eth1`) with:
+
+```json
+"PackageConfig": {
+    "github.com/gokrazy/gokrazy/cmd/dhcp": {
+        "CommandLineFlags": ["-interface=eth1"]
+    }
+}
+```
+
 Then write the image to a microSD card with `gok overwrite --full /dev/sdX`.
 
 The R76S boot ROM tries eMMC before microSD. If the eMMC already contains a
