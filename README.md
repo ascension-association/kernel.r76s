@@ -74,6 +74,11 @@ gokrazy’s DHCP client only configures `eth0`, which is the port labelled
 }
 ```
 
+The RTL8125 NICs have no MAC address programmed. U-Boot derives stable,
+locally administered MAC addresses from the SoC’s unique ID (OTP) and passes
+them to Linux through the `ethernet0`/`ethernet1` device tree aliases, so
+each board keeps the same MACs (and DHCP lease) across reboots.
+
 Then write the image to a microSD card with `gok overwrite --full /dev/sdX`.
 
 The R76S boot ROM tries eMMC before microSD. If the eMMC already contains a

@@ -1,0 +1,62 @@
+From: gokrazy
+Subject: [PATCH] arm64: dts: rockchip: nanopi-r76s: add ethernet aliases
+
+Describe the two PCIe-attached RTL8125 NICs and point the ethernet0 and
+ethernet1 aliases at them. The RTL8125s have no MAC address programmed,
+so Linux used a random one on every boot. With the aliases, U-Boot
+writes its ethaddr/eth1addr (derived from the SoC's OTP cpuid) into
+local-mac-address, giving each port a stable MAC.
+
+--- a/arch/arm64/boot/dts/rockchip/rk3576-nanopi-r76s.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3576-nanopi-r76s.dts
+@@ -20,6 +20,8 @@
+ 	compatible = "friendlyarm,nanopi-r76s", "rockchip,rk3576";
+ 
+ 	aliases {
++		ethernet0 = &rtl8125_0;
++		ethernet1 = &rtl8125_1;
+ 		mmc0 = &sdhci;
+ 		mmc1 = &sdmmc;
+ 		mmc2 = &sdio;
+@@ -661,6 +663,20 @@
+ 	reset-gpios = <&gpio2 RK_PB4 GPIO_ACTIVE_HIGH>;
+ 	vpcie3v3-supply = <&vcc_3v3_s3>;
+ 	status = "okay";
++
++	pcie@0,0 {
++		reg = <0x0 0 0 0 0>;
++		bus-range = <0x01 0x0f>;
++		device_type = "pci";
++		ranges;
++		#address-cells = <3>;
++		#size-cells = <2>;
++
++		rtl8125_0: ethernet@0,0 {
++			compatible = "pci10ec,8125";
++			reg = <0x010000 0 0 0 0>;
++		};
++	};
+ };
+ 
+ &pcie1 {
+@@ -669,6 +685,20 @@
+ 	reset-gpios = <&gpio0 RK_PC7 GPIO_ACTIVE_HIGH>;
+ 	vpcie3v3-supply = <&vcc_3v3_s3>;
+ 	status = "okay";
++
++	pcie@0,0 {
++		reg = <0x200000 0 0 0 0>;
++		bus-range = <0x21 0x2f>;
++		device_type = "pci";
++		ranges;
++		#address-cells = <3>;
++		#size-cells = <2>;
++
++		rtl8125_1: ethernet@0,0 {
++			compatible = "pci10ec,8125";
++			reg = <0x210000 0 0 0 0>;
++		};
++	};
+ };
+ 
+ &pinctrl {
