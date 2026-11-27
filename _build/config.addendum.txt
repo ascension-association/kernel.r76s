@@ -177,6 +177,9 @@ CONFIG_MACVLAN=y
 # For bridge and VLAN ethernet devices:
 CONFIG_BRIDGE=y
 CONFIG_VLAN_8021Q=y
+# So bridged traffic passes the inet nftables hooks (bridge-nf-call-iptables),
+# for apps that filter a bridge in the wire, such as FLTR's bridge mode:
+CONFIG_BRIDGE_NETFILTER=y
 
 CONFIG_EFIVAR_FS=y
 
